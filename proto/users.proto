@@ -1,0 +1,143 @@
+syntax = "proto3";
+
+package users;
+
+option go_package = "github.com/slavayssiere-spoon/users";
+
+import "google/api/annotations.proto";
+import "google/protobuf/empty.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+import "groups.proto";
+
+option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
+	info: {
+		title: "Spoon - Users WS";
+		version: "0.0.1";
+		contact: {
+			name: "Spoon Cloud Team";
+			url: "https://gitlab.com/SpoonQIR/Cloud/services/users";
+			email: "sebastien.lavayssiere@spoon.ai";
+		};
+	};
+	// Overwriting host entry breaks tests, so this is not done here.
+	external_docs: {
+		url: "https://gitlab.com/SpoonQIR/Cloud/services/users";
+		description: "link for docs";
+	}
+	schemes: HTTPS;
+	schemes: HTTP;
+	consumes: "application/json";
+	produces: "application/json";
+	security_definitions: {
+		security: {
+			key: "ApiKeyAuth";
+			value: {
+				type: TYPE_API_KEY;
+				in: IN_HEADER;
+				name: "Authorization";
+			}
+		}
+	}
+	security: {
+		security_requirement: {
+			key: "ApiKeyAuth";
+			value: {};
+		}
+	}
+	responses: {
+		key: "403";
+		value: {
+			description: "Returned when the user does not have permission to access the resource.";
+		}
+	}
+	responses: {
+		key: "404";
+		value: {
+			description: "Returned when the resource does not exist.";
+			schema: {
+				json_schema: {
+					type: STRING;
+				}
+			}
+		}
+	}
+	responses: {
+		key: "418";
+		value: {
+			description: "I'm a teapot.";
+			schema: {
+				json_schema: {
+					ref: ".grpc.gateway.examples.internal.proto.examplepb.NumericEnum";
+				}
+			}
+		}
+	}
+};
+
+message User {
+	// @inject_tag: gorm:"-"
+	uint64 id = 1;
+	// @inject_tag: gorm:"unique;not null;index:email"
+	string email = 2;
+	string given_name = 3;
+	string family_name = 4;
+	string job = 5;
+	string mobile = 6;
+	string prefContactWay = 7;
+	// @inject_tag: gorm:"-"
+	repeated groups.Group groups = 8;
+	// @inject_tag: gorm:"-"
+	repeated string paths = 9;
+	string location = 10;
+	string nickname = 11;
+	string langue = 12;
+  uint64 birthday = 13;
+}
+
+message Users {
+	repeated User list = 1;
+	uint64 limit = 2;
+	uint64 offset = 3;
+	uint64 max = 4;
+}
+
+service users {
+	rpc GetAll (Users) returns (Users) {
+		option (google.api.http) = {
+			get: "/v1/users"
+		};
+	}
+
+	rpc Get (User) returns (User) {
+		option (google.api.http) = {
+			get: "/v1/users/id/{id}"
+		};
+	}
+
+	rpc Add (User) returns (User) {
+		option (google.api.http) = {
+			post: "/v1/users"
+			body: "*"
+		};
+	}
+
+	rpc Update (User) returns (User) {
+		option (google.api.http) = {
+			patch: "/v1/users"
+			body: "*"
+		};
+	}
+
+	rpc GetMe (google.protobuf.Empty) returns (User) {
+		option (google.api.http) = {
+			get: "/v1/users/me"
+		};
+	}
+
+	rpc UpdateMe (User) returns (User) {
+		option (google.api.http) = {
+			patch: "/v1/users/me"
+			body: "*"
+		};
+	}
+}
