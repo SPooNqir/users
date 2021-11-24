@@ -85,7 +85,7 @@ func (s *UserService) InitUsers(usersHost string, tracer opentracing.Tracer, log
 	return connect
 }
 
-func (s *UserService) getUser(ctx context.Context, usr *User) (*User, error) {
+func (s *UserService) GetUser(ctx context.Context, usr *User) (*User, error) {
 	for i := 0; i <= 5; i++ {
 		md, ok := metadata.FromOutgoingContext(ctx)
 		if !ok {
