@@ -10,7 +10,7 @@ require (
 	github.com/opentracing/opentracing-go v1.2.0
 	github.com/sirupsen/logrus v1.8.1
 	gitlab.com/SpoonQIR/Cloud/library/golang-common.git v1.0.7
-	google.golang.org/genproto v0.0.0-20220323144105-ec3c684e5b14
+	google.golang.org/genproto v0.0.0-20220324131243-acbaeb5b85eb
 	google.golang.org/grpc v1.45.0
 	google.golang.org/protobuf v1.28.0
 )
