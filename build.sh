@@ -4,7 +4,7 @@ set -e
 
 GROUPS_VERSION="master"
 
-curl -o proto/groups.proto "https://raw.githubusercontent.com/slavayssiere-spoon/groups/$GROUPS_VERSION/proto/groups.proto"
+curl -o proto/groups.proto "https://raw.githubusercontent.com/SPooNqir/groups/$GROUPS_VERSION/proto/groups.proto"
 
 GEN_PATH="."
 GO_LIB_PATH=$(go env GOPATH)/src
